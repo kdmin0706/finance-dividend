@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <!--변수 값 설정 -->
-    <property name="LOG_DIR" value="./"/>
-    <property name="LOG_FILE_NAME" value="mylog"/>
+    <property name="LOG_DIR" value="./logs"/>
+    <property name="LOG_FILE_NAME" value="log_file"/>
+    <property name="LOGS_LEVEL" value="info"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -29,10 +30,10 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="info"/>
-    <logger name="org.hibernate" level="info"/>
+    <logger name="org.springframework" level="${LOGS_LEVEL}"/>
+    <logger name="org.hibernate" level="${LOGS_LEVEL}"/>
 
-    <root level="info">
+    <root level="${LOGS_LEVEL}">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
