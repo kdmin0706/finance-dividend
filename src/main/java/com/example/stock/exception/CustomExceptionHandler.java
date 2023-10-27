@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Objects;
+
 @Slf4j
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -16,6 +18,7 @@ public class CustomExceptionHandler {
                 .message(e.getMessage())
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.resolve(e.getStatusCode()));
-    }
+        return new ResponseEntity<>(response,
+                Objects.requireNonNull(HttpStatus.resolve(e.getStatusCode())));
+    }`
 }
