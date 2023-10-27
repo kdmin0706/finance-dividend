@@ -63,7 +63,6 @@ public class YahooFinanceScraper implements Scraper{
             scrapedResult.setDividends(dividends);
 
         } catch (IOException e) {
-            // TODO
             throw new RuntimeException(e);
         }
         return scrapedResult;
@@ -82,11 +81,8 @@ public class YahooFinanceScraper implements Scraper{
             return new Company(ticker, title);
 
         } catch (IOException e) {
-            // TODO
-//            e.printStackTrace();
-            throw new RuntimeException("company scrap error : " + e);
+            throw new RuntimeException("scrapCompanyByTicker Error : " + e);
         }
 
-//        return null;
     }
 }
