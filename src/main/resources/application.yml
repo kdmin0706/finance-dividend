@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: stock-financial
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      use-new-id-generator-mappings: false
+    show-sql: true
+    defer-datasource-initialization: true
+
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
+  redis:
+    host: localhost
+    port: 6379
+
+  jwt:
+    secret: aXR5LXRlc3QnCn0KCnRhc2tzLm5hbWVkKCd0ZXN0Jykg
+
+scheduler:
+  scrap:
+    yahoo: "0 0 0 * * *"
