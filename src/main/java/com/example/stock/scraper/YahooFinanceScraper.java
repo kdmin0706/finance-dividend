@@ -78,7 +78,10 @@ public class YahooFinanceScraper implements Scraper{
             Element titleElement = document.getElementsByTag("h1").get(0);
             String title = titleElement.text().split("\\(")[0].trim();
 
-            return new Company(ticker, title);
+            return Company.builder()
+                    .ticker(ticker)
+                    .name(title)
+                    .build();
 
         } catch (IOException e) {
             throw new RuntimeException("scrapCompanyByTicker Error : " + e);
