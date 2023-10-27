@@ -20,5 +20,5 @@ public class CustomExceptionHandler {
 
         return new ResponseEntity<>(response,
                 Objects.requireNonNull(HttpStatus.resolve(e.getStatusCode())));
-    }`
+    }
 }
