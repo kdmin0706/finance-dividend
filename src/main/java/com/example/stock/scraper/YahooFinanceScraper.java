@@ -82,9 +82,11 @@ public class YahooFinanceScraper implements Scraper{
             return new Company(ticker, title);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO
+//            e.printStackTrace();
+            throw new RuntimeException("company scrap error : " + e);
         }
 
-        return null;
+//        return null;
     }
 }
