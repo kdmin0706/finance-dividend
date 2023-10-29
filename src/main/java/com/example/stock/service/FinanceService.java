@@ -42,6 +42,9 @@ public class FinanceService {
                                     .map(e -> new Dividend(e.getDate(), e.getDividend()))
                                     .collect(Collectors.toList());
 
-        return new ScrapedResult(Company.fromEntity(companyEntity), dividends);
+        return new ScrapedResult(Company.builder()
+                .name(companyEntity.getName())
+                .ticker(companyEntity.getTicker())
+                .build(), dividends);
     }
 }

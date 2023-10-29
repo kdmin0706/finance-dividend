@@ -38,15 +38,18 @@ public class ScraperScheduler {
         List<CompanyEntity> companies = this.companyRepository.findAll();
         
         //회사마다 배당금 정보를 새로 스크래핑
-        for (CompanyEntity company : companies) {
-            log.info("scraping scheduler is started => " + company.getName());
+        for (CompanyEntity entity : companies) {
+            log.info("scraping scheduler is started => " + entity.getName());
             ScrapedResult scrapedResult
-                    = this.yahooFinanceScarper.scrap(Company.fromEntity(company));
+                    = this.yahooFinanceScarper.scrap(Company.builder()
+                            .name(entity.getName())
+                            .ticker(entity.getTicker())
+                            .build());
 
             //스크래핑한 배당금 정보 중 데이터베이스에 없는 값을 저장
             scrapedResult.getDividends().stream()
                     //디비든 모델을 디비든 엔티티로 매핑
-                    .map(e -> new DividendEntity(company.getId(), e))
+                    .map(e -> new DividendEntity(entity.getId(), e))
                     //엘리먼트를 하나씩 디비든 레퍼지토리에 삽입(존재하지 않는 경우에만)
                     .forEach(e -> {
                         boolean exists = this.dividendRepository.
