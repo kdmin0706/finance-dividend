@@ -1,6 +1,5 @@
 package com.example.stock.model;
 
-import com.example.stock.persist.entity.CompanyEntity;
 import lombok.*;
 
 @Getter
