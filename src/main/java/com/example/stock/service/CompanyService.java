@@ -19,86 +19,24 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@AllArgsConstructor
-public class CompanyService {
+public interface CompanyService {
+    Company save(String ticker);
 
-    private final Trie trie;
-    private final Scraper yahooFinanceScraper;
+    Company storeCompanyAndDividend(String ticker);
 
-    private final CompanyRepository companyRepository;
-    private final DividendRepository dividendRepository;
-
-    public Company save(String ticker) {
-        boolean exists = this.companyRepository.existsByTicker(ticker);
-        if (exists) {
-            throw new RuntimeException("already exists ticker -> " + ticker);
-        }
-        return this.storeCompanyAndDividend(ticker);
-    }
-
-    private Company storeCompanyAndDividend(String ticker) {
-
-        // ticker 를 기준으로 회사를 스크래핑한다.
-        Company company = this.yahooFinanceScraper.scrapCompanyByTicker(ticker);
-        if (ObjectUtils.isEmpty(company)) {
-            throw new RuntimeException("failed to scrap ticker -> " + ticker);
-        }
-
-        // 해당 회사가 존재할 경우, 회사의 배당금 정보를 스크래핑
-        ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(company);
-
-        // 스크래핑 결과
-        CompanyEntity companyEntity = this.companyRepository.save(new CompanyEntity(company));
-        List<DividendEntity> dividendEntityList = scrapedResult.getDividends().stream()
-                .map(e -> new DividendEntity(companyEntity.getId(), e))
-                .collect(Collectors.toList());
-
-        this.dividendRepository.saveAll(dividendEntityList);
-        return company;
-    }
-
-    public Page<CompanyEntity> getAllCompany(Pageable pageable) {
-        return this.companyRepository.findAll(pageable);
-    }
+    Page<CompanyEntity> getAllCompany(Pageable pageable);
 
     //자동 완성 Like 추가
-    public List<String> getCompanyNamesByKeyword(String keyword) {
-        PageRequest limit = PageRequest.of(0, 10);
-        Page<CompanyEntity> companyEntities
-                = this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
-
-        return companyEntities.stream()
-                .map(CompanyEntity::getName)
-                .collect(Collectors.toList());
-    }
+    List<String> getCompanyNamesByKeyword(String keyword);
 
     //자동 완성 추가
-    public void addAutocompleteKeyword(String keyword) {
-        this.trie.put(keyword, null);
-    }
+    void addAutocompleteKeyword(String keyword);
 
     //자동 완성 조회
-    public List<String> autocomplete(String keyword) {
-        return (List<String>) this.trie.prefixMap(keyword).keySet()
-                .stream()
-                .limit(10)
-                .collect(Collectors.toList());
-    }
+    List<String> autocomplete(String keyword);
 
     //자동 완성 삭제
-    public void deleteAutoCompleteKeyword(String keyword) {
-        this.trie.remove(keyword);
-    }
+    void deleteAutoCompleteKeyword(String keyword);
 
-    public String deleteCompany(String ticker) {
-        CompanyEntity company = this.companyRepository.findByTicker(ticker)
-                .orElseThrow(NoCompanyException::new);
-
-        this.dividendRepository.deleteAllByCompanyId(company.getId());
-        this.companyRepository.delete(company);
-
-        this.deleteAutoCompleteKeyword(company.getName());
-        return company.getName();
-    }
+    String deleteCompany(String ticker);
 }
