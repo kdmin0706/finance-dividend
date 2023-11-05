@@ -21,13 +21,13 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody Auth.SignUp request) {
+    public ResponseEntity<?> signUp(@RequestBody Auth.SignUp request) {
         MemberEntity result = this.memberService.register(request);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody Auth.SignIn request) {
+    public ResponseEntity<?> signIn(@RequestBody Auth.SignIn request) {
         MemberEntity entity = this.memberService.authenticate(request);
         String token = this.tokenProvider.generateToken(entity.getUsername(), entity.getRoles());
         log.info("user login -> " + request.getUsername());
