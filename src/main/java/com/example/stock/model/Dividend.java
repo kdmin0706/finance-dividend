@@ -19,5 +19,5 @@ public class Dividend {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime date;
 
-    private String dividend;
+    private String divide;
 }

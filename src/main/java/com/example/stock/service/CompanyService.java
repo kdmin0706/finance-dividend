@@ -23,8 +23,5 @@ public interface CompanyService {
     //자동 완성 조회
     List<String> autocomplete(String keyword);
 
-    //자동 완성 삭제
-    void deleteAutoCompleteKeyword(String keyword);
-
     String deleteCompany(String ticker);
 }

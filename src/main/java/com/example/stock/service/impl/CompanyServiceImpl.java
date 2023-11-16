@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -93,12 +94,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .collect(Collectors.toList());
     }
 
-    //자동 완성 삭제
-    @Override
-    public void deleteAutoCompleteKeyword(String keyword) {
-        this.trie.remove(keyword);
-    }
-
+    @Transactional
     @Override
     public String deleteCompany(String ticker) {
         CompanyEntity company = this.companyRepository.findByTicker(ticker)
@@ -107,7 +103,12 @@ public class CompanyServiceImpl implements CompanyService {
         this.dividendRepository.deleteAllByCompanyId(company.getId());
         this.companyRepository.delete(company);
 
-        this.deleteAutoCompleteKeyword(company.getName());
+        deleteAutoCompleteKeyword(company.getName());
         return company.getName();
+    }
+
+    //자동 완성 삭제
+    private void deleteAutoCompleteKeyword(String keyword) {
+        this.trie.remove(keyword);
     }
 }

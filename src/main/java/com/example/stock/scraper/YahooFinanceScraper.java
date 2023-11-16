@@ -37,7 +37,17 @@ public class YahooFinanceScraper implements Scraper{
             Elements parsingDivs = document.getElementsByAttributeValue("data-test", "historical-prices");
             Element tableElement = parsingDivs.get(0);  //table 전체
 
-            Element tBody = tableElement.children().get(1);
+            //parsingDivs 리스트와 tableElement 변수에 대한 추가적인 널 체크를 수행
+            Element tBody;
+            if (tableElement != null) {
+                if (tableElement.children().size() >= 2) {
+                    tBody = tableElement.children().get(1);
+                } else {
+                    throw new RuntimeException("테이블의 값이 부족합니다.");
+                }
+            } else {
+                throw new RuntimeException("리스트에 값이 없습니다.");
+            }
 
             List<Dividend> dividends = new ArrayList<>();
             for (Element e : tBody.children()) {
@@ -53,11 +63,11 @@ public class YahooFinanceScraper implements Scraper{
                     throw new RuntimeException("Unexpected Month enum value ->" + splits[0]);
                 }
 
-                int day = Integer.parseInt(splits[1].replace(",",""));
+                int day = Integer.parseInt(splits[1].replace(",", ""));
                 int year = Integer.parseInt(splits[2]);
                 String dividend = splits[3];
 
-                dividends.add(new Dividend(LocalDateTime.of(year, month, day, 0, 0),dividend));
+                dividends.add(new Dividend(LocalDateTime.of(year, month, day, 0, 0), dividend));
             }
 
             scrapedResult.setDividends(dividends);

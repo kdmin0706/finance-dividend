@@ -37,6 +37,6 @@ public class DividendEntity {
     public DividendEntity(Long companyId, Dividend dividend) {
         this.companyId = companyId;
         this.date = dividend.getDate();
-        this.dividend = dividend.getDividend();
+        this.dividend = dividend.getDivide();
     }
 }
